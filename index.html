@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#09090b">
+  <meta name="description" content="BLACK GOKU CHECK BAN — vérification du format des numéros internationaux.">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icons/icon.svg">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.8/build/css/intlTelInput.css">
+  <title>BLACK GOKU CHECK BAN</title>
+  <style>
+    :root{color-scheme:dark;--bg:#08080a;--panel:#151316;--panel2:#21171b;--red:#f02b45;--red2:#8e1025;--muted:#b7aeb1;--line:#53202b;--ok:#7ce0a1;--warn:#ffd27a}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -10%,#5b0c1b 0,transparent 48%),var(--bg);color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .shell{width:min(100% - 28px,520px);margin:0 auto;padding:20px 0 40px}
+    .splash{position:fixed;inset:0;z-index:10;background:#070608;display:grid;place-items:center;animation:splashOut .8s ease 1.8s forwards}
+    .splash-inner{text-align:center;animation:pulse 1.2s ease-in-out infinite alternate}
+    .splash-mark{font-size:64px;filter:drop-shadow(0 0 18px #f02b45)}
+    .splash-name{font-weight:950;letter-spacing:3px;color:#ff4058;font-size:clamp(24px,7vw,36px);text-shadow:0 0 22px #b20d2a}
+    .splash-sub{font-size:10px;letter-spacing:5px;color:#c8aeb4;margin-top:8px}
+    @keyframes pulse{to{transform:scale(1.04);filter:brightness(1.25)}}
+    @keyframes splashOut{to{opacity:0;visibility:hidden;pointer-events:none}}
+    header{text-align:center;padding:12px 4px 22px}
+    .crown{font-size:30px;margin-bottom:4px}
+    .brand{font-size:clamp(25px,7vw,34px);font-weight:950;letter-spacing:1px;color:#ff334e;text-shadow:0 0 18px #9e1028}
+    .tagline{font-size:10px;letter-spacing:4px;color:#c6aeb4;margin-top:6px}
+    .topline{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:10px 0 16px}
+    .pill{border:1px solid var(--line);border-radius:99px;padding:7px 11px;color:#e9cbd1;font-size:12px;background:#160e12}
+    .panel{background:linear-gradient(145deg,#1c1519,#101013);border:1px solid var(--line);border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 10px 30px #0006}
+    h1,h2,h3,p{margin-top:0}
+    h1{font-size:20px;margin-bottom:5px}
+    h2{font-size:17px;margin-bottom:12px}
+    .muted{color:var(--muted);font-size:13px;line-height:1.55}
+    label{display:block;color:#e8dce0;font-size:13px;margin:15px 0 8px}
+    select,input[type=tel],input[type=text]{width:100%;background:#0d0d10;color:#fff;border:1px solid #63303a;border-radius:11px;padding:13px;outline:none}
+    select:focus,input:focus{border-color:var(--red);box-shadow:0 0 0 2px #f02b4522}
+    .iti{width:100%}.iti input{width:100%;background:#0d0d10;color:#fff;border:1px solid #63303a;border-radius:11px;padding-top:13px;padding-bottom:13px}
+    .iti__country-list{background:#181519;color:#fff;border:1px solid var(--line);max-width:min(310px,84vw)}
+    .iti__country.iti__highlight{background:#45202a}.iti__search-input{background:#0d0d10!important;color:#fff!important}
+    .primary{width:100%;border:0;border-radius:11px;padding:15px;margin-top:18px;background:linear-gradient(100deg,#850d22,#f02b45);color:white;font-weight:850;letter-spacing:.7px;box-shadow:0 5px 18px #a10b283f}
+    .secondary{border:1px solid #71303c;border-radius:10px;padding:10px 13px;background:#21171b;color:#f5dce1}
+    .danger{border-color:#8c293b;color:#ff9aaa}
+    .result{display:none;margin-top:16px;padding:14px;border-radius:12px;background:#0e1110;border:1px solid #31533e;line-height:1.55;overflow-wrap:anywhere}
+    .result.invalid{background:#1c1114;border-color:#74303c}
+    .result strong{display:block;margin-bottom:5px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .tile{border:1px solid var(--line);border-radius:13px;padding:13px;background:#171216;text-align:left;color:#fff}
+    .tile b{display:block;margin-top:5px;font-size:13px}.tile span{font-size:22px}
+    .tabs{display:flex;gap:7px;overflow:auto;padding:2px 0 8px}
+    .tab{white-space:nowrap;border:1px solid var(--line);border-radius:99px;background:#151115;color:#d8c6ca;padding:9px 12px;font-size:12px}
+    .tab.active{background:#6e1022;border-color:#e52b46;color:white}
+    .section{display:none}.section.active{display:block}
+    .history-item{border-bottom:1px solid #38232a;padding:11px 0;font-size:13px;overflow-wrap:anywhere}
+    .history-item:last-child{border:0}
+    .status{color:var(--ok);font-weight:700}.small{font-size:11px;color:#aa9ba0;line-height:1.5}
+    .checkline{display:flex;gap:9px;align-items:flex-start;margin-top:12px;color:#d9cbd0;font-size:13px;line-height:1.45}
+    .checkline input{accent-color:var(--red);margin-top:3px}
+    .empty{color:#a99da1;text-align:center;padding:18px 4px;font-size:13px}
+    footer{text-align:center;color:#897d82;font-size:11px;padding:15px}
+    .hidden{display:none!important}
+    @media(min-width:480px){.panel{padding:22px}}
+  </style>
+</head>
+<body>
+  <div class="splash" id="splash" aria-label="BLACK GOKU CHECK BAN">
+    <div class="splash-inner">
+      <div class="splash-mark">♛</div>
+      <div class="splash-name">BLACK GOKU</div>
+      <div class="splash-sub">CHECK BAN</div>
+    </div>
+  </div>
+
+  <main class="shell">
+    <header>
+      <div class="crown">♛</div>
+      <div class="brand">BLACK GOKU</div>
+      <div class="tagline">CHECK BAN · WORLDWIDE</div>
+    </header>
+
+    <div class="topline">
+      <span class="pill" id="appVersion">VERSION 1.0</span>
+      <select id="language" aria-label="Language" style="width:auto;padding:8px 10px">
+        <option value="fr">Français</option>
+        <option value="pt">Português</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+
+    <nav class="tabs" aria-label="Navigation">
+      <button class="tab active" data-section="checker" data-i18n="tabCheck">CHECK</button>
+      <button class="tab" data-section="history" data-i18n="tabHistory">Historique</button>
+      <button class="tab" data-section="settings" data-i18n="tabSettings">Paramètres</button>
+    </nav>
+
+    <section class="section active" id="checker">
+      <div class="panel">
+        <h1 data-i18n="checkerTitle">Vérificateur international</h1>
+        <p class="muted" data-i18n="checkerIntro">Sélectionne un pays, saisis un numéro et vérifie son format international.</p>
+
+        <label for="mode" data-i18n="modeLabel">Mode</label>
+        <select id="mode">
+          <option value="personal" data-i18n="personalMode">Mon numéro personnel</option>
+          <option value="authorized" data-i18n="authorizedMode">Numéro avec autorisation</option>
+        </select>
+
+        <label for="phone" data-i18n="phoneLabel">Pays et numéro de téléphone</label>
+        <input id="phone" type="tel" autocomplete="tel" placeholder="Numéro de téléphone">
+
+        <label class="checkline">
+          <input type="checkbox" id="consent">
+          <span data-i18n="consent">Je confirme qu'il s'agit de mon numéro ou que son propriétaire m'a autorisé à le vérifier.</span>
+        </label>
+
+        <button class="primary" id="checkBtn" data-i18n="checkButton">⚡ CHECK NOW</button>
+        <div class="result" id="result" role="status" aria-live="polite"></div>
+        <p class="small" style="margin:14px 0 0" data-i18n="disclaimerShort">Cette vérification contrôle le format du numéro, pas son compte WhatsApp ni un éventuel bannissement.</p>
+      </div>
+
+      <div class="grid">
+        <button class="tile" data-go="history"><span>◷</span><b data-i18n="historyTile">Historique</b></button>
+        <button class="tile" data-go="settings"><span>⚙</span><b data-i18n="settingsTile">Confidentialité</b></button>
+      </div>
+    </section>
+
+    <section class="section" id="history">
+      <div class="panel">
+        <h2 data-i18n="historyTitle">Historique des vérifications</h2>
+        <p class="muted" data-i18n="historyIntro">L'historique est enregistré uniquement sur cet appareil.</p>
+        <div id="historyList"></div>
+        <button class="secondary danger" id="clearHistory" data-i18n="clearHistory">Supprimer tout l'historique</button>
+      </div>
+    </section>
+
+    <section class="section" id="settings">
+      <div class="panel">
+        <h2 data-i18n="settingsTitle">Paramètres et confidentialité</h2>
+        <label for="settingsLanguage" data-i18n="languageLabel">Langue de l'application</label>
+        <select id="settingsLanguage">
+          <option value="fr">Français</option>
+          <option value="pt">Português</option>
+          <option value="en">English</option>
+        </select>
+        <h3 style="margin:20px 0 8px;font-size:14px" data-i18n="privacyTitle">Confidentialité</h3>
+        <p class="muted" data-i18n="privacyText">Les vérifications sont effectuées dans ton navigateur. L'historique est conservé localement sur cet appareil. Aucun numéro n'est envoyé à un serveur par cette application. Supprime l'historique ou les données du navigateur pour effacer les données locales.</p>
+        <h3 style="margin:20px 0 8px;font-size:14px" data-i18n="limitsTitle">Limites de vérification</h3>
+        <p class="muted" data-i18n="limitsText">Un format valide ne prouve pas que le numéro est attribué, joignable, inscrit sur WhatsApp ou banni. WhatsApp ne fournit pas de vérificateur public de bannissement pour les numéros d'autres personnes.</p>
+        <button class="secondary" id="installBtn" data-i18n="installButton">Installer l'application</button>
+        <p class="small" id="installHelp" data-i18n="installHelp">Si le bouton n'est pas disponible, ouvre le menu de ton navigateur puis choisis « Ajouter à l'écran d'accueil ».</p>
+      </div>
+    </section>
+
+    <footer>BLACK GOKU CHECK BAN © 2026 · <span data-i18n="footerText">Outil de format téléphonique</span></footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.8/build/js/intlTelInput.min.js"></script>
+  <script>
+  (() => {
+    const translations = {
+      fr: {
+        tabCheck:"CHECK",tabHistory:"Historique",tabSettings:"Paramètres",
+        checkerTitle:"Vérificateur international",checkerIntro:"Sélectionne un pays, saisis un numéro et vérifie son format international.",
+        modeLabel:"Mode",personalMode:"Mon numéro personnel",authorizedMode:"Numéro avec autorisation",
+        phoneLabel:"Pays et numéro de téléphone",consent:"Je confirme qu'il s'agit de mon numéro ou que son propriétaire m'a autorisé à le vérifier.",
+        checkButton:"⚡ CHECK NOW",disclaimerShort:"Cette vérification contrôle le format du numéro, pas son compte WhatsApp ni un éventuel bannissement.",
+        historyTile:"Historique",settingsTile:"Confidentialité",historyTitle:"Historique des vérifications",
+        historyIntro:"L'historique est enregistré uniquement sur cet appareil.",clearHistory:"Supprimer tout l'historique",
+        settingsTitle:"Paramètres et confidentialité",languageLabel:"Langue de l'application",privacyTitle:"Confidentialité",
+        privacyText:"Les vérifications sont effectuées dans ton navigateur. L'historique est conservé localement sur cet appareil. Aucun numéro n'est envoyé à un serveur par cette application. Supprime l'historique ou les données du navigateur pour effacer les données locales.",
+        limitsTitle:"Limites de vérification",limitsText:"Un format valide ne prouve pas que le numéro est attribué, joignable, inscrit sur WhatsApp ou banni. WhatsApp ne fournit pas de vérificateur public de bannissement pour les numéros d'autres personnes.",
+        installButton:"Installer l'application",installHelp:"Si le bouton n'est pas disponible, ouvre le menu de ton navigateur puis choisis « Ajouter à l'écran d'accueil ».",
+        footerText:"Outil de format téléphonique",emptyHistory:"Aucune vérification enregistrée.",needConsent:"Confirme que tu as le droit de vérifier ce numéro.",
+        invalid:"NUMÉRO AU FORMAT INVALIDE",valid:"FORMAT INTERNATIONAL VALIDE",country:"Pays",number:"Numéro",
+        mode:"Mode",personal:"Personnel",authorized:"Autorisé",wa:"Statut WhatsApp : NON VÉRIFIÉ",
+        notProof:"Cela ne confirme ni l'attribution du numéro, ni son activité, ni un bannissement WhatsApp.",
+        saved:"Résultat enregistré localement.",clearConfirm:"Supprimer tout l'historique ?",deleted:"Historique supprimé.",
+        installUnavailable:"Installation non proposée par ce navigateur. Utilise le menu du navigateur."
+      },
+      pt: {
+        tabCheck:"VERIFICAR",tabHistory:"Histórico",tabSettings:"Configurações",
+        checkerTitle:"Verificador internacional",checkerIntro:"Escolha um país, digite um número e verifique o formato internacional.",
+        modeLabel:"Modo",personalMode:"Meu número pessoal",authorizedMode:"Número autorizado",
+        phoneLabel:"País e número de telefone",consent:"Confirmo que este é meu número ou que o proprietário autorizou a verificação.",
+        checkButton:"⚡ VERIFICAR",disclaimerShort:"Esta verificação analisa o formato do número, não a conta ou um possível banimento do WhatsApp.",
+        historyTile:"Histórico",settingsTile:"Privacidade",historyTitle:"Histórico de verificações",
+        historyIntro:"O histórico fica salvo somente neste aparelho.",clearHistory:"Apagar todo o histórico",
+        settingsTitle:"Configurações e privacidade",languageLabel:"Idioma do aplicativo",privacyTitle:"Privacidade",
+        privacyText:"As verificações são feitas no navegador. O histórico fica armazenado localmente neste aparelho. Este aplicativo não envia números para um servidor. Apague o histórico ou os dados do navegador para remover os dados locais.",
+        limitsTitle:"Limites da verificação",limitsText:"Um formato válido não prova que o número existe, está ativo, usa WhatsApp ou foi banido. O WhatsApp não oferece um verificador público de banimento para números de terceiros.",
+        installButton:"Instalar aplicativo",installHelp:"Se o botão não estiver disponível, abra o menu do navegador e escolha «Adicionar à tela inicial».",
+        footerText:"Ferramenta de formato telefônico",emptyHistory:"Nenhuma verificação salva.",needConsent:"Confirme que você tem autorização para verificar este número.",
+        invalid:"NÚMERO COM FORMATO INVÁLIDO",valid:"FORMATO INTERNACIONAL VÁLIDO",country:"País",number:"Número",
+        mode:"Modo",personal:"Pessoal",authorized:"Autorizado",wa:"Status do WhatsApp: NÃO VERIFICADO",
+        notProof:"Isso não confirma se o número existe, está ativo ou foi banido do WhatsApp.",
+        saved:"Resultado salvo localmente.",clearConfirm:"Apagar todo o histórico?",deleted:"Histórico apagado.",
+        installUnavailable:"A instalação não está disponível neste navegador. Use o menu do navegador."
+      },
+      en: {
+        tabCheck:"CHECK",tabHistory:"History",tabSettings:"Settings",
+        checkerTitle:"Worldwide number checker",checkerIntro:"Choose a country, enter a number and validate its international format.",
+        modeLabel:"Mode",personalMode:"My personal number",authorizedMode:"Number with permission",
+        phoneLabel:"Country and phone number",consent:"I confirm this is my number or that its owner has authorized this check.",
+        checkButton:"⚡ CHECK NOW",disclaimerShort:"This checks the phone number format, not its WhatsApp account or any possible ban.",
+        historyTile:"History",settingsTile:"Privacy",historyTitle:"Check history",
+        historyIntro:"History is stored only on this device.",clearHistory:"Delete all history",
+        settingsTitle:"Settings and privacy",languageLabel:"App language",privacyTitle:"Privacy",
+        privacyText:"Checks run in your browser. History is stored locally on this device. This app does not send phone numbers to a server. Delete history or browser data to remove local data.",
+        limitsTitle:"Verification limits",limitsText:"A valid format does not prove that a number is assigned, reachable, registered on WhatsApp or banned. WhatsApp does not provide a public ban checker for other people's numbers.",
+        installButton:"Install app",installHelp:"If the button is unavailable, open your browser menu and choose “Add to Home screen”.",
+        footerText:"Phone number format tool",emptyHistory:"No checks saved.",needConsent:"Confirm that you are allowed to check this number.",
+        invalid:"INVALID PHONE NUMBER FORMAT",valid:"VALID INTERNATIONAL FORMAT",country:"Country",number:"Number",
+        mode:"Mode",personal:"Personal",authorized:"Authorized",wa:"WhatsApp status: NOT VERIFIED",
+        notProof:"This does not confirm that the number exists, is active or is banned from WhatsApp.",
+        saved:"Result saved locally.",clearConfirm:"Delete all history?",deleted:"History deleted.",
+        installUnavailable:"Installation is not offered by this browser. Use the browser menu."
+      }
+    };
+
+    const $ = id => document.getElementById(id);
+    const storageKey = "bgcb_history_v1";
+    let lang = localStorage.getItem("bgcb_language") || "fr";
+    let deferredInstall = null;
+    const phone = $("phone");
+    const result = $("result");
+    const iti = window.intlTelInput(phone, {
+      initialCountry:"br",
+      separateDialCode:true,
+      nationalMode:true,
+      autoPlaceholder:"polite",
+      loadUtils:() => import("https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.8/build/js/utils.js")
+    });
+
+    function t(key){return (translations[lang] || translations.fr)[key] || key;}
+    function getHistory(){
+      try { return JSON.parse(localStorage.getItem(storageKey) || "[]"); }
+      catch { return []; }
+    }
+    function saveHistory(items){localStorage.setItem(storageKey,JSON.stringify(items.slice(0,100)));}
+    function showResult(message, invalid=false){
+      result.textContent=message;
+      result.classList.toggle("invalid",invalid);
+      result.style.display="block";
+    }
+    function renderHistory(){
+      const list=$("historyList"), items=getHistory();
+      list.innerHTML="";
+      if(!items.length){const p=document.createElement("p");p.className="empty";p.textContent=t("emptyHistory");list.appendChild(p);return;}
+      items.forEach(item=>{
+        const row=document.createElement("div");row.className="history-item";
+        const top=document.createElement("strong");top.textContent=item.number;
+        const detail=document.createElement("div");detail.className="muted";
+        detail.textContent=`${item.country} · ${item.mode} · ${item.date}`;
+        const status=document.createElement("div");status.className="status";status.textContent=item.valid?t("valid"):t("invalid");
+        row.append(top,detail,status);list.appendChild(row);
+      });
+    }
+    function setLanguage(value){
+      lang=translations[value]?value:"fr";
+      localStorage.setItem("bgcb_language",lang);
+      document.documentElement.lang=lang;
+      $("language").value=lang;$("settingsLanguage").value=lang;
+      document.querySelectorAll("[data-i18n]").forEach(el=>{
+        const key=el.dataset.i18n;
+        if(translations[lang][key]) el.textContent=translations[lang][key];
+      });
+      renderHistory();
+    }
+    function openSection(name){
+      document.querySelectorAll(".section").forEach(s=>s.classList.toggle("active",s.id===name));
+      document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.section===name));
+      if(name==="history")renderHistory();
+    }
+    document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>openSection(b.dataset.section)));
+    document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>openSection(b.dataset.go)));
+    $("language").addEventListener("change",e=>setLanguage(e.target.value));
+    $("settingsLanguage").addEventListener("change",e=>setLanguage(e.target.value));
+
+    $("checkBtn").addEventListener("click",async()=>{
+      if(!phone.value.trim()){showResult(t("invalid"),true);return;}
+      if(!$("consent").checked){showResult(t("needConsent"),true);return;}
+      const btn=$("checkBtn");btn.disabled=true;
+      try{
+        await iti.promise;
+        const valid=iti.isValidNumber();
+        const number=valid?iti.getNumber():phone.value.trim();
+        if(!valid){showResult(t("invalid")+"\n"+t("number")+": "+number,true);return;}
+        const countryData=iti.getSelectedCountryData();
+        const mode=$("mode").value==="personal"?t("personal"):t("authorized");
+        const countryName=countryData.name || countryData.iso2.toUpperCase();
+        showResult(`✓ ${t("valid")}\n${t("country")}: ${countryName}\n${t("number")}: ${number}\n${t("mode")}: ${mode}\n${t("wa")}\n\n${t("notProof")}`);
+        const items=getHistory();
+        items.unshift({number,country:countryName,mode,valid:true,date:new Date().toLocaleString(lang)});
+        saveHistory(items);renderHistory();
+      }catch(e){
+        showResult(t("invalid"),true);
+      }finally{btn.disabled=false;}
+    });
+    $("clearHistory").addEventListener("click",()=>{
+      if(confirm(t("clearConfirm"))){localStorage.removeItem(storageKey);renderHistory();showResult(t("deleted"));}
+    });
+
+    window.addEventListener("beforeinstallprompt",e=>{
+      e.preventDefault();deferredInstall=e;$("installBtn").classList.remove("hidden");
+    });
+    $("installBtn").addEventListener("click",async()=>{
+      if(!deferredInstall){alert(t("installUnavailable"));return;}
+      deferredInstall.prompt();await deferredInstall.userChoice;deferredInstall=null;
+    });
+
+    if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+      window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+    }
+    setLanguage(lang);
+    renderHistory();
+    $("installBtn").classList.add("hidden");
+    setTimeout(()=>$("splash")?.remove(),2600);
+  })();
+  </script>
+</body>
+</html>
